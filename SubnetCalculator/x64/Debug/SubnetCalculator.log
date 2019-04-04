@@ -1,0 +1,6 @@
+﻿  SubnetCalculator.cpp
+c:\users\szayo111\desktop\subnet-calculator\subnetcalculator\functions.h(45): warning C4334: "<<": wynik 32-bitowe przesunięcia niejawnie skonwertowano do 64 bitów (czy 64-bitowe przesunięcie było zamierzone?)
+c:\users\szayo111\desktop\subnet-calculator\subnetcalculator\functions.h(146): warning C4244: "return": konwersja z "double" do "long", możliwa utrata danych
+c:\users\szayo111\desktop\subnet-calculator\subnetcalculator\functions.h(211): warning C4804: "<=": niebezpieczne użycie typu "bool" w operacji
+c:\users\szayo111\desktop\subnet-calculator\subnetcalculator\functions.h(194): warning C4715: "set_ip”: niewszystkie ścieżki kodu zwracają wartość
+  SubnetCalculator.vcxproj -> C:\Users\SZAYO111\Desktop\Subnet-Calculator\x64\Debug\SubnetCalculator.exe

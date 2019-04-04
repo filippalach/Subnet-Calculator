@@ -1,117 +1,68 @@
 ﻿#include "pch.h"
 #include "functions.h"
 
-int main()
+int main(int argc, char **argv)
 {
-	std::string ip = "172.16.160.200/24";
+	std::string ip=set_ip(argc,argv);
 
-	std::regex regIp(R"(([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})/([0-9]+))");
+	std::regex regIpMask(R"(([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})/([0-9]+))");
+
+	show_matches_reg(ip, regIpMask);
+
+	std::regex regIp(R"([0-9]{1,3})");
 
 	show_matches_reg(ip, regIp);
 
-	std::regex regIp2(R"([0-9]{1,3})");
+	std::vector<int> adressInt;
 
-	show_matches_reg(ip, regIp2);
+	push_matches_vec(ip, regIp, adressInt);
 
-	std::vector<int> vector;
-
-	push_matches_vec(ip, regIp2, vector);
-
-	int maskFromVec = get_mask(vector); // zgarnam info o masce i popuje ostatni elemtn i mam 4
-	//std::cout << "maska: " << maskFromVec << "\n";
-	//std::cout << "size: " << vector.size() << "\n";
-	//vector.pop_back();
-	//std::cout << "size2: " << vector.size() << "\n";
-	//std::cout << "Vecotr: \n";
-
-	/*for (int &i : vector) {
-		std::bitset<8> bset2(i);
-		std::cout << "Dziesietnie: "<<i << " ";
-		std::cout << "Binarnie: "<<bset2 << "\n";
-	}*/
-	printHostDec(vector);
-	printHostBinary(vector);
-	/*std::bitset<32> mask2(0);
-	std::cout << mask2 << "\n";
-
-	for (int i = 31; i > 31 - maskFromVec; i--) { // - maskFromVec
-		mask2 |= 1UL << i;
+	if (check_if_good(adressInt))
+		std::cout << "\nGiven addres is valid\n";
+	else {
+		std::cout << "\nGiven address is not valid\n";
+		return 1;
 	}
-	std::cout << mask2;*/
 
-	//std::bitset<32> maska;
+	int maskFromVec = get_mask(adressInt);
+
+	std::cout << "Decimal Host: " << print_decimal(adressInt) << "\n";
+	std::cout << "Binary Host: " << print_binary(adressInt) << "\n";
+
 	std::string parsed = init_mask(maskFromVec);
-	std::cout << "\nparsed string: " << parsed << "\n";
-	//std::string xd = maska.to_string();
+	//std::cout << "\nMask represented in binary: " << parsed << "\n";
 
-	//std::cout << "maska: "<<xd;
-
-	//std::string xd = mask2.to_string();
-	//std::cout << "\n" << xd;
-
-
-	//int sizeOfString = std::size(xd);
-	//xd.insert(8, ".");
-	//xd.insert(17, ".");
-	//xd.insert(26, ".");
-
-	std::vector<std::string> vec2; //vec2 jest w binarnych stringach
-	std::vector<int> vec22;
-	//std::cout << "\n" << xd << "\n";
-
+	std::vector<std::string> adressString; //vec2 jest w binarnych stringach
 	std::regex regMask(R"(([0-1]{8}))");
-	show_matches_string(parsed, regMask, vec2);
+	push_matches_vec(parsed, regMask, adressString);
 
-	std::vector<unsigned long> vecUnsigned; //string sparsowany na inty - dzieisetna reprezentacja
+	std::vector<unsigned long> addresULong; //przechowa forme dzieisaetna z maski
+	addresULong = convertMask(adressString); //konwersja do dziesietnego ze stringa
 
-	std::cout << "Vector w binarnym:: \n\n";
-	for (auto j : vec2) {
-		std::cout << j << " ";
-	}
-	/*for (auto &j : vec2) { //vec 2 to nie maska
-			//int integer = std::stoi(j);
-			//std::bitset<8> bset22(std::stoi(j));
-			//std::cout << "Dwojkowo: " << integer << " ";
-			//std::cout << "Binarnie: " << bset22 << "\n";
-		unsigned long value = std::bitset<64>(j).to_ulong();
-		vecUnsigned.push_back(value);
-		std::cout << j << " ";
-	}*/
-	vecUnsigned = convertMask(vec2);
-	std::cout << "\nWektor w dziesitnym: \n";
-	//std::cout << "test wektor: " << vec2.at(2);
-	for (int i : vecUnsigned) {
-		std::cout << i << " ";
-	}
+	std::cout << "\nMask addres in dec: " << print_decimal(addresULong) << "\n";
+	std::cout << "Mask addres in bin: " << print_binary(addresULong) << "\n\n";
 
-	/*show_matches(xd, regMask,vec22);
-	std::cout << "Vector:: \n\n";
-	for (auto j : vec22) {
-			//int integer = std::stoi(j);
-			std::bitset<8> bset22(j);
-			std::cout << "Dwojkowo: " << j << " ";
-			std::cout << "Binarnie: " << bset22 << "\n";
-	}*/
+	std::vector<int> net;
+	net = netIP(adressInt, addresULong);
 
-	/*std::string  test= "1101";
-	unsigned long value = std::bitset<64>(test).to_ulong();
-	std::cout << value << std::endl;*/
+	std::cout << "Network IP in dec is: " << print_decimal(net) << "\n";
+	std::cout << "Network IP in bin is: " << print_binary(net) << "\n\n";
 
-	std::cout << "\n\n\n";
+	std::vector<int> broadcast;
+	broadcast = broadcastIP(net, addresULong);
 
-	//vecUnsigned.at(2) = 192;
+	std::cout << "Bradcast adress in dec: " << print_decimal(broadcast) << "\n";
+	std::cout << "Bradcast adress in bin: " << print_binary(broadcast) << "\n\n";
 
-	//test adresu sieci
-	/*for (int i = 0; i < 4; i++) {
-		int a = vector.at(i);// & vecUnsigned.at(0) vector ma hosta
-		//std::cout << "host: " << a << "\n";
-		int b = vecUnsigned.at(i); //vecunisgnet ma maske
-		//std::cout << "Maska: " << b << "\n";
-		int res = a;
-		res = res & b;
+	std::cout << "Max amout of hosts is: " << max_host(maskFromVec) << "\n\n";
 
-		std::cout << res << ".";
-	}*/
-	netIP(vector, vecUnsigned);
-	broadcastIP(vector, vecUnsigned);
+	first_host(net);
+	last_host(broadcast);
+
+	std::cout << "Network Class is: " << network_class(adressInt) << "\n";
+	std::cout << "Ip addres is private: " << is_private(adressInt) << "\n";
+
+	ping_host(adressInt);
+
+	system("PAUSE");
 }

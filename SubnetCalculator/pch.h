@@ -5,5 +5,6 @@
 #include <regex>
 #include <bitset>
 #include <vector>
+#include <cmath>
 
 #endif
